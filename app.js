@@ -1,71 +1,66 @@
 const readlineSync = require('readline-sync'); // handle user input
 
-class MathQuiz {
-    // initialize game 
-    constructor() {
-        this.score = 0;
-        this.totalQuestions = 5;
-        this.currentQuestion = 0;
-    }
-    
-    start() {
-        console.log("Welcome to the Math Quiz Game!");
-        this.nextQuestion();
-    }
+let score = 0;
+const totalQuestions = 5;
+let currentQuestion = 0;
 
-    generateQuestion() {
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        const num2 = Math.floor(Math.random() * 10) + 1;
-        const operations = ['+', '-', '*', '/'];
-        const operation = operations[Math.floor(Math.random() * operations.length)];
+function startGame() {
+    console.log("Welcome to the Math Quiz Game!");
+    nextQuestion();
+}
 
-        switch (operation) {
-            case '+':
-                this.correctAnswer = num1 + num2;
-                console.log(`Question ${this.currentQuestion + 1}: What is ${num1} + ${num2}?`);
-                break;
-            case '-':
-                this.correctAnswer = num1 - num2;
-                console.log(`Question ${this.currentQuestion + 1}: What is ${num1} - ${num2}?`);
-                break;
-            case '*':
-                this.correctAnswer = num1 * num2;
-                console.log(`Question ${this.currentQuestion + 1}: What is ${num1} * ${num2}?`);
-                break;
-            case '/':
-                this.correctAnswer = num1;
-                const adjustedNum1 = num1 * num2;
-                console.log(`Question ${this.currentQuestion + 1}: What is ${adjustedNum1} / ${num2}?`);
-                break;
-        }
+function generateQuestion() {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    const operations = ['+', '-', '*', '/'];
+    const operation = operations[Math.floor(Math.random() * operations.length)]; // randomly pick out one of the operations
+
+    let correctAnswer;
+    switch (operation) {
+        case '+':
+            correctAnswer = num1 + num2;
+            console.log(`Question ${currentQuestion + 1}: What is ${num1} + ${num2}?`);
+            break;
+        case '-':
+            correctAnswer = num1 - num2;
+            console.log(`Question ${currentQuestion + 1}: What is ${num1} - ${num2}?`);
+            break;
+        case '*':
+            correctAnswer = num1 * num2;
+            console.log(`Question ${currentQuestion + 1}: What is ${num1} * ${num2}?`);
+            break;
+        case '/':
+            correctAnswer = num1;
+            const adjustedNum1 = num1 * num2; // make sure that the product is divisible and results in an integer answer
+            console.log(`Question ${currentQuestion + 1}: What is ${adjustedNum1} / ${num2}?`);
+            break;
     }
+    return correctAnswer;
+}
 
-    // checks if user input and the actual correct answer matches
-    checkAnswer(answer) {
-        if (parseInt(answer) === this.correctAnswer) {
-            console.log("Correct!");
-            this.score++;
-        } else {
-            console.log(`Wrong! The correct answer was ${this.correctAnswer}.`);
-        }
-    }
-
-    nextQuestion() {
-        if (this.currentQuestion < this.totalQuestions) {
-            this.generateQuestion();
-            const userAnswer = readlineSync.question(`Your answer: `);
-            this.checkAnswer(userAnswer);
-            this.currentQuestion++;
-            this.nextQuestion();
-        } else {
-            this.endGame();
-        }
-    }
-
-    endGame() {
-        console.log(`Game Over! Your score is ${this.score} out of ${this.totalQuestions}.`);
+function checkAnswer(userAnswer, correctAnswer) {
+    if (parseInt(userAnswer) === correctAnswer) { // convert user input (string) into an integer and then see if matches to the correct answer
+        console.log("Correct!");
+        score++;
+    } else {
+        console.log(`Wrong! The correct answer was ${correctAnswer}.`);
     }
 }
 
-const game = new MathQuiz();
-game.start();
+function nextQuestion() {
+    if (currentQuestion < totalQuestions) {
+        const correctAnswer = generateQuestion();
+        const userAnswer = readlineSync.question(`Your answer: `);
+        checkAnswer(userAnswer, correctAnswer);
+        currentQuestion++;
+        nextQuestion();
+    } else {
+        endGame();
+    }
+}
+
+function endGame() {
+    console.log(`Game Over! Your score is ${score} out of ${totalQuestions}.`);
+}
+
+startGame();
