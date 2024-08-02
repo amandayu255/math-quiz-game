@@ -50,10 +50,10 @@ function checkAnswer(userAnswer, correctAnswer) {
 function nextQuestion() {
     if (currentQuestion < totalQuestions) {
         const correctAnswer = generateQuestion();
-        const userAnswer = readlineSync.question(`Your answer: `);
-        checkAnswer(userAnswer, correctAnswer);
-        currentQuestion++;
-        nextQuestion();
+        const userAnswer = readlineSync.question(`Your answer: `); // asks for user input
+        checkAnswer(userAnswer, correctAnswer); // checks answer
+        currentQuestion++; // keep track of question number
+        nextQuestion(); // goes to next question
     } else {
         endGame();
     }
